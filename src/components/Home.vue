@@ -4,7 +4,7 @@
       <div class="forms-container">
         <div class="signin-signup">
           <form class="sign-in-form">
-            <h2 class="title">登 录</h2>
+            <p class="title">登 录</p>
             <!-- element-ui 使用 -->
             <el-form ref="loginFormRef"  label-width="0px" class="login_form">
               <!-- 用户名 -->
@@ -24,27 +24,43 @@
             <el-button type="primary" class="btn solid">登 录</el-button>
           </form>
           <form class="sign-up-form">
-            <h2 class="title">注 册</h2>
-            <el-form>
-              <el-form-item prop="tel">
-                <el-input auto-complete="off" placeholder="请输入手机号"></el-input>
+            <p class="title">注册</p>
+            <el-form
+                :model="ruleForm2"
+                status-icon
+                :rules="rules2"
+                ref="ruleForm2"
+                label-width="0">
+              <el-form-item prop="name">
+                <el-input v-model="ruleForm2.name" auto-complete="off" placeholder="请输入姓名" style="width: 300px"></el-input>
               </el-form-item>
-<!--              <el-form-item prop="smscode" class="code">-->
-<!--                <el-input  placeholder="邮箱验证码"></el-input>-->
-<!--                <el-button type="primary" >{{buttonText}}</el-button>-->
+<!--              <el-form-item prop="tel">-->
+<!--                <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入手机号" style="width: 300px"></el-input>-->
 <!--              </el-form-item>-->
+              <el-form-item prop="mail">
+                <el-input v-model="ruleForm2.mail" auto-complete="off" placeholder="请输入邮箱" style="width: 300px"></el-input>
+              </el-form-item>
+              <el-form-item prop="smscode" class="code">
+                <el-input v-model="ruleForm2.smscode" placeholder="邮箱验证码"></el-input>
+                <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{buttonText}}</el-button>
+              </el-form-item>
               <el-form-item prop="pass">
-                <el-input type="password"  auto-complete="off" placeholder="输入密码"></el-input>
+                <el-input type="password" v-model="ruleForm2.pass" auto-complete="off"
+                          placeholder="8-20位字符在数字、小写、大写字母" style="width: 300px"></el-input>
+                <PasswordStrength v-model="ruleForm2.pass" style="padding-top: 10px;"></PasswordStrength>
               </el-form-item>
               <el-form-item prop="checkPass">
-                <el-input type="password"  auto-complete="off" placeholder="确认密码"></el-input>
+                <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"
+                          placeholder="确认密码" style="width: 300px"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="submitForm('ruleForm2')" style="width:100%;" class="btn">注册</el-button>
+                <p class="login"></p>
               </el-form-item>
             </el-form>
-            <el-button type="primary"  class="btn">注 册</el-button>
           </form>
         </div>
       </div>
-
       <div class="panels-container">
         <div class="panel left-panel">
           <div class="content">
@@ -74,7 +90,91 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import PasswordStrength from "@/components/PasswordStrength";
+
 export default {
+  // 注册组件
+  data() {
+    // <!--验证手机号是否合法-->
+    let checkTel = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入手机号码'))
+      } else if (!this.checkMobile(value)) {
+        callback(new Error('请输入正确格式的手机号码'))
+      } else {
+        callback()
+      }
+    }
+    // <!--检验邮箱是否合法-->
+    let checkMail = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入邮箱'))
+      } else if (!this.checkEMail(value)) {
+        callback(new Error('请输入正确格式的邮箱'))
+      } else {
+        callback()
+      }
+    }
+    //  <!--验证码是否为空-->
+    let checkSmscode = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入邮箱验证码'))
+      } else {
+        callback()
+      }
+    }
+    // <!--姓名是否为空-->
+    let checkName = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入姓名'))
+      } else {
+        callback()
+      }
+    }
+    // <!--验证密码-->
+    let validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"))
+      } else {
+        if (this.ruleForm2.checkPass !== "") {
+          this.$refs.ruleForm2.validateField("checkPass");
+        }
+        callback()
+      }
+    }
+    // <!--二次验证密码-->
+    let validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm2.pass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      ruleForm2: {
+        pass: "",
+        checkPass: "",
+        tel: "",
+        smscode: "",
+        mail: "",
+        name: ""
+      },
+      rules2: {
+        pass: [{ validator: validatePass, trigger: 'change' }],
+        checkPass: [{ validator: validatePass2, trigger: 'change' }],
+        tel: [{ validator: checkTel, trigger: 'change' }],
+        smscode: [{ validator: checkSmscode, trigger: 'change' }],
+        mail: [{validator: checkMail, trigger: 'change'}],
+        name: [{validator: checkName, trigger: 'change'}]
+      },
+      buttonText: '发送验证码',
+      isDisabled: false, // 是否禁止点击发送验证码按钮
+      flag: true
+    }
+  },
   methods: {
     scan_click() {
       const sign_in_btn = document.querySelector("#sign-in-btn");
@@ -88,9 +188,70 @@ export default {
       sign_in_btn.addEventListener("click", () => {
         container.classList.remove("sign-up-mode");
       });
+    },
+    // <!--发送验证码-->
+    sendCode () {
+      let mail = this.ruleForm2.mail
+      if (this.checkEMail(mail)) {
+        let time = 60
+        this.buttonText = '已发送'
+        this.isDisabled = true
+        if (this.flag) {
+          this.flag = false;
+          let timer = setInterval(() => {
+            time--;
+            this.buttonText = time + ' 秒'
+            if (time === 0) {
+              clearInterval(timer);
+              this.buttonText = '重新获取'
+              this.isDisabled = false
+              this.flag = true;
+            }
+          }, 1000)
+        }
+      }
+    },
+    // <!--提交注册-->
+    submitForm(formName) {
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          // 登录发送请求,需要判断
+          // const result = await this.$http.post('', JSON.stringify(this.ruleForm2));
+          setTimeout(() => {
+            this.$message.success('注册成');
+            // 延迟跳转
+            // this.$router.push({
+            //   name:"index"
+            // });
+          }, 400);
+        } else {
+          this.$message.error('注册失败');
+          return false;
+        }
+      })
+    },
+    // <!--进入登录页-->
+    gotoLogin() {
+      setTimeout(() => {
+        this.$router.push({
+          path: "/login"
+        });
+      }, 100);
+    },
+    // 验证手机号
+    checkMobile(str) {
+      let re = /^1[3456789]\d{9}$/
+      return re.test(str);
+    },
+    checkEMail(str) {
+      // 正则表达式参考 https://www.zhihu.com/question/20614859/answer/15640762
+      let re = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+\\.[a-zA-Z0-9_-]+$/
+      return re.test(str);
     }
   },
-  name: 'HelloWorld'
+  // 注册组件
+  components:{PasswordStrength},
+  name: 'Home'
 }
 </script>
 
@@ -148,6 +309,12 @@ form {
 }
 
 form.sign-up-form {
+  max-width: 340px;
+  margin: 60px auto;
+  background: #fff;
+  padding: 20px 40px;
+  border-radius: 10px;
+  position: relative;
   opacity: 0;
   z-index: 1;
 }
@@ -160,19 +327,6 @@ form.sign-in-form {
   font-size: 2.2rem;
   color: #444;
   margin-bottom: 10px;
-}
-
-.input-field {
-  max-width: 380px;
-  width: 100%;
-  background-color: #f0f0f0;
-  margin: 10px 0;
-  height: 55px;
-  border-radius: 55px;
-  display: grid;
-  grid-template-columns: 15% 85%;
-  padding: 0 0.4rem;
-  position: relative;
 }
 
 .input-field i {
@@ -196,36 +350,6 @@ form.sign-in-form {
 .input-field input::placeholder {
   color: #aaa;
   font-weight: 500;
-}
-
-.social-text {
-  padding: 0.7rem 0;
-  font-size: 1rem;
-}
-
-.social-media {
-  display: flex;
-  justify-content: center;
-}
-
-.social-icon {
-  height: 46px;
-  width: 46px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 0.45rem;
-  color: #333;
-  border-radius: 50%;
-  border: 1px solid #333;
-  text-decoration: none;
-  font-size: 1.1rem;
-  transition: 0.3s;
-}
-
-.social-icon:hover {
-  color: #4481eb;
-  border-color: #4481eb;
 }
 
 .btn {
@@ -493,6 +617,38 @@ form.sign-in-form {
     bottom: 28%;
     left: 50%;
   }
+}
+</style>
+
+<style scoped>
+.login {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 22px;
+  color: #1ab2ff;
+  cursor: pointer;
+  text-align: left;
+  text-indent: 8px;
+  width: 160px;
+}
+.login:hover {
+  color: #2c2fd6;
+}
+
+.code >>> .el-form-item__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.code button {
+  margin-left: 20px;
+  width: 140px;
+  text-align: center;
+}
+
+.el-icon-check:before {
+  content: "\e6da";
 }
 
 </style>

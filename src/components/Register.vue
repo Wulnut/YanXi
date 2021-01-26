@@ -23,6 +23,9 @@
           </el-form-item>
           <el-form-item prop="pass">
             <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="输入密码"></el-input>
+            <el-form-item>
+              <PasswordStrength v-model="ruleForm2.pass" style="padding-top: 10px;"></PasswordStrength>
+            </el-form-item>
           </el-form-item>
           <el-form-item prop="checkPass">
             <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="确认密码"></el-input>
@@ -39,12 +42,11 @@
 
 <!-- 行为 -->
 <script>
+// eslint-disable-next-line no-unused-vars
 import PasswordStrength from "@/components/PasswordStrength";
+
 export default {
   name: "Register",
-  // 注册组件
-  // eslint-disable-next-line vue/no-unused-components
-  components:{PasswordStrength},
   data() {
     // <!--验证手机号是否合法-->
     let checkTel = (rule, value, callback) => {
@@ -175,7 +177,9 @@ export default {
       let re = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+\\.[a-zA-Z0-9_-]+$/
       return re.test(str);
     }
-  }
+  },
+  // 注册组件
+  components:{PasswordStrength}
 };
 </script>
 

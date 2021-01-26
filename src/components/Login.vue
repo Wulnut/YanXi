@@ -99,7 +99,8 @@ export default {
         // await只能用于被async修饰的方法中,需要把该匿名函数修饰成异步的async方法
         // 由于返回值中只有data有用，就解构其中的数据获取自己需要的即可
         // post返回值是promise
-        const {data: result} = await this.$http.post('login', this.loginForm);
+        // js对象装json JSON.stringify(对象)
+        const {data: result} = await this.$http.post('login', JSON.stringify(this.loginForm));
         console.log(result);
         // 判断状态码200为成功,400为失败
         if (result.meta.status !== 200) {

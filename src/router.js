@@ -9,7 +9,7 @@ Vue.use(Router)
 const router = new Router({
     mode: 'hash',
     routes: [
-        {path: '/', redirect: '/login'},
+        {path: '/', redirect: '/home'},
         {path: '/login', component: Login},
         {path: '/home', component: Home},
         {path: '/register', component: Register}

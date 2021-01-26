@@ -11,6 +11,9 @@ import {Footer} from "element-ui";
 import {Menu} from "element-ui";
 import {Submenu} from "element-ui";
 import {MenuItem} from "element-ui";
+import {Col} from "element-ui";
+import {Row} from "element-ui";
+import {Progress} from "element-ui";
 import { Loading } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 
@@ -27,6 +30,9 @@ Vue.use(Footer)
 Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
+Vue.use(Row)
+Vue.use(Progress)
 Vue.use(Loading)
+Vue.use(Col)
 // Message组件需要挂载到Vue，只需要访问$message
 Vue.prototype.$message = Message

@@ -114,12 +114,12 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style>
 .el-progress__text {
   display: none;
 }
 .el-progress-bar {
-  padding-right: 0;
+  padding-right: 10px !important;
   margin: 0;
 }
 </style>
