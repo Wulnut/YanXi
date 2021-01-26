@@ -43,7 +43,7 @@
               </el-form-item>
               <el-form-item prop="smscode" class="code">
                 <el-input v-model="ruleForm2.smscode" placeholder="邮箱验证码"></el-input>
-                <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{buttonText}}</el-button>
+                <el-button type="primary" :disabled='isDisabled' @click="sendCode('ruleForm2')">{{buttonText}}</el-button>
               </el-form-item>
               <el-form-item prop="pass">
                 <el-input type="password" v-model="ruleForm2.pass" auto-complete="off"
@@ -98,15 +98,15 @@ export default {
   // 注册组件
   data() {
     // <!--验证手机号是否合法-->
-    let checkTel = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入手机号码'))
-      } else if (!this.checkMobile(value)) {
-        callback(new Error('请输入正确格式的手机号码'))
-      } else {
-        callback()
-      }
-    }
+    // let checkTel = (rule, value, callback) => {
+    //   if (value === '') {
+    //     callback(new Error('请输入手机号码'))
+    //   } else if (!this.checkMobile(value)) {
+    //     callback(new Error('请输入正确格式的手机号码'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     // <!--检验邮箱是否合法-->
     let checkMail = (rule, value, callback) => {
       if (value === '') {
@@ -176,19 +176,19 @@ export default {
       fullscreenLoading: false,
       // 注册
       ruleForm2: {
-        pass: "",
-        checkPass: "",
-        tel: "",
-        smscode: "",
-        mail: "",
-        name: ""
+        mail: '985951964@qq.com',
+        smscode: '',
+        pass: 'lyz',
+        name: 'lyz',
+        checkPass: 'lyz',
+        tel: ''
       },
       rules2: {
+        mail: [{validator: checkMail, trigger: 'change'}],
         pass: [{ validator: validatePass, trigger: 'change' }],
         checkPass: [{ validator: validatePass2, trigger: 'change' }],
-        tel: [{ validator: checkTel, trigger: 'change' }],
+        // tel: [{ validator: checkTel, trigger: 'change' }],
         smscode: [{ validator: checkSmscode, trigger: 'change' }],
-        mail: [{validator: checkMail, trigger: 'change'}],
         name: [{validator: checkName, trigger: 'change'}]
       },
       buttonText: '发送验证码',
@@ -211,7 +211,7 @@ export default {
       });
     },
     // <!--发送验证码-->
-    sendCode () {
+   async sendCode () {
       let mail = this.ruleForm2.mail
       if (this.checkEMail(mail)) {
         let time = 60
@@ -219,6 +219,13 @@ export default {
         this.isDisabled = true
         if (this.flag) {
           this.flag = false;
+          let params = new URLSearchParams()
+          params.append('email', mail)
+          const result = await this.$http.post('/user/genEmailAuthCode', params)
+          console.log(result)
+          // if (result.status === 'error') {
+          //   return this.$message.error('邮箱错误')
+          // }
           let timer = setInterval(() => {
             time--;
             this.buttonText = time + ' 秒'
@@ -234,20 +241,24 @@ export default {
     },
     // <!--提交注册-->
     submitForm(formName) {
-      this.$refs[formName].validate(async valid => {
-        if (valid) {
-          // 登录发送请求,需要判断
-          // const result = await this.$http.post('', JSON.stringify(this.ruleForm2));
+      this.$refs[formName].validate(async (valid) => {
+        if (!valid) return 0;
+        let params = {
+          "email": this.ruleForm2.mail,
+          "authCode": this.ruleForm2.smscode,
+          "password": this.ruleForm2.pass,
+          "name": this.ruleForm2.name
+        }
+        const {data: result} = await this.$http.post('/user/register/emailUser', JSON.stringify(params))
+        console.log(result);
+        if (result.status === 'error') {
+          return this.$message.error(result.msg);
+        } else {
           setTimeout(() => {
-            this.$message.success('注册成');
-            // 延迟跳转
             // this.$router.push({
             //   name:"index"
             // });
-          }, 400);
-        } else {
-          this.$message.error('注册失败');
-          return false;
+          }, 400)
         }
       })
     },
@@ -262,10 +273,11 @@ export default {
         // 由于返回值中只有data有用，就解构其中的数据获取自己需要的即可
         // post返回值是promise
         // js对象装json JSON.stringify(对象)
-        const {data: result} = await this.$http.post('login', JSON.stringify(this.loginForm));
+        let params = new URLSearchParams(this.loginForm);
+        const {data: result} = await this.$http.post('/user/login', params);
         console.log(result);
         // 判断状态码200为成功,400为失败
-        if (result.meta.status !== 200) {
+        if (result.status === 'error') {
           return this.$message.error('登录失败');
         } else {
           // localStorage和sessionStorage区别，localStorage是持久化的存储
@@ -277,19 +289,19 @@ export default {
           setTimeout(() => {
             this.fullscreenLoading = false;
             this.$message.success('登录成功');
-            this.$router.push("/home");
+            // this.$router.push("/home");
           }, 2000);
         }
       });
     },
-    // <!--进入登录页-->
-    gotoLogin() {
-      setTimeout(() => {
-        this.$router.push({
-          path: "/login"
-        });
-      }, 100);
-    },
+    // // <!--进入登录页-->
+    // gotoLogin() {
+    //   setTimeout(() => {
+    //     this.$router.push({
+    //       path: "/login"
+    //     });
+    //   }, 100);
+    // },
     // 验证手机号
     checkMobile(str) {
       let re = /^1[3456789]\d{9}$/
@@ -297,7 +309,7 @@ export default {
     },
     checkEMail(str) {
       // 正则表达式参考 https://www.zhihu.com/question/20614859/answer/15640762
-      let re = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+\\.[a-zA-Z0-9_-]+$/
+      let re =  /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/
       return re.test(str);
     }
   },

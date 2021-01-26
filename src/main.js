@@ -13,9 +13,11 @@ import './assets/css/global.css'
 import axios from "axios"
 
 //让ajax携带cookie
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 // 配置请求根路径
-axios.defaults.baseURL = '#'
+axios.defaults.baseURL = 'http://localhost:8080/'
+// 设置默认头部
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 // axios请求拦截
 // axios.interceptors.request.use(config => {
 //   // console.log(config)
