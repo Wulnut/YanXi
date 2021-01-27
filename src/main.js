@@ -1,3 +1,7 @@
+/**
+ * Created by 垃圾桶.
+ * Date: 2021-1-27
+ */
 import Vue from 'vue'
 import App from './App.vue'
 import router from "@/router"

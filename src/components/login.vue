@@ -1,4 +1,7 @@
-
+<!--
+Created by 垃圾桶
+Date: 2021-1-27
+-->
 <template>
   <div class="container">
       <div class="forms-container">
@@ -82,7 +85,7 @@
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
               laboriosam ad deleniti.
             </p>
-            <el-button type="primary" round id="sign-in-btn" class="btn transparent">登 录</el-button>
+            <el-button type="primary" round id="sign-in-btn" class="btn transparent" @click="scan_click">登 录</el-button>
           </div>
           <img src="../assets/images/register.svg" class="image" alt="" />
         </div>
@@ -92,7 +95,7 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import PasswordStrength from "@/components/PasswordStrength";
+import PasswordStrength from "@/template/PasswordStrength";
 
 export default {
   // 注册组件
@@ -111,6 +114,7 @@ export default {
     let checkMail = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入邮箱'))
+        return false
       } else if (!this.checkEMail(value)) {
         callback(new Error('请输入正确格式的邮箱'))
       } else {
@@ -157,15 +161,15 @@ export default {
     return {
       // 登录表单数据绑定
       loginForm: {
-        username: 'lyz',
-        password: '123'
+        username: '',
+        password: ''
       },
       // 表单的验证规则对象
       loginFormRules: {
         // 验证用户名是否合法
         username: [
           {required: true, message: '请输入手机号/邮箱', trigger: 'blur'},
-          {min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
+          {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
         ],
         // 验证密码是否合法
         password: [
@@ -176,11 +180,11 @@ export default {
       fullscreenLoading: false,
       // 注册
       ruleForm2: {
-        mail: '985951964@qq.com',
+        mail: '',
         smscode: '',
-        pass: 'lyz',
-        name: 'lyz',
-        checkPass: 'lyz',
+        pass: '',
+        name: '',
+        checkPass: '',
         tel: ''
       },
       rules2: {
@@ -221,11 +225,11 @@ export default {
           this.flag = false;
           let params = new URLSearchParams()
           params.append('email', mail)
-          const result = await this.$http.post('/user/genEmailAuthCode', params)
+          const {data: result} = await this.$http.post('/user/genEmailAuthCode', params)
           console.log(result)
-          // if (result.status === 'error') {
-          //   return this.$message.error('邮箱错误')
-          // }
+          if (result.status === 'error') {
+            return this.$message.error('邮箱错误')
+          }
           let timer = setInterval(() => {
             time--;
             this.buttonText = time + ' 秒'
@@ -237,6 +241,8 @@ export default {
             }
           }, 1000)
         }
+      } else {
+        this.$message.error('请输入邮箱')
       }
     },
     // <!--提交注册-->
@@ -255,9 +261,8 @@ export default {
           return this.$message.error(result.msg);
         } else {
           setTimeout(() => {
-            // this.$router.push({
-            //   name:"index"
-            // });
+            this.$message.success('注册成功');
+            document.getElementById('sign-in-btn').click()
           }, 400)
         }
       })
@@ -276,7 +281,6 @@ export default {
         let params = new URLSearchParams(this.loginForm);
         const {data: result} = await this.$http.post('/user/login', params);
         console.log(result);
-        // 判断状态码200为成功,400为失败
         if (result.status === 'error') {
           return this.$message.error('登录失败');
         } else {
@@ -294,14 +298,6 @@ export default {
         }
       });
     },
-    // // <!--进入登录页-->
-    // gotoLogin() {
-    //   setTimeout(() => {
-    //     this.$router.push({
-    //       path: "/login"
-    //     });
-    //   }, 100);
-    // },
     // 验证手机号
     checkMobile(str) {
       let re = /^1[3456789]\d{9}$/

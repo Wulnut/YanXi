@@ -1,3 +1,8 @@
+<!--
+Created by 垃圾桶
+Date: 2021-1-27
+-->
+
 <!-- 模板 -->
 <template>
   <div>
@@ -43,7 +48,7 @@
 <!-- 行为 -->
 <script>
 // eslint-disable-next-line no-unused-vars
-import PasswordStrength from "@/components/PasswordStrength";
+import PasswordStrength from "@/template/PasswordStrength";
 
 export default {
   name: "Register",

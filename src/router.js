@@ -1,18 +1,18 @@
+/**
+* Created by 垃圾桶.
+* Date: 2021-1-27
+*/
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from "@/components/Login";
-import Home from "@/components/Home";
-import Register from "@/components/Register";
+import login from "@/components/login";
 
 Vue.use(Router)
 
 const router = new Router({
     mode: 'hash',
     routes: [
-        {path: '/', redirect: '/home'},
-        {path: '/login', component: Login},
-        {path: '/home', component: Home},
-        {path: '/register', component: Register}
+        {path: '/', redirect: '/login'},
+        {path: '/login', component: login},
     ]
 })
 
