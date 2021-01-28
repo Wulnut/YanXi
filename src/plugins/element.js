@@ -19,6 +19,9 @@ import { Col } from 'element-ui'
 import { Row } from 'element-ui'
 import { Progress } from 'element-ui'
 import { Loading } from 'element-ui'
+import { Breadcrumb } from 'element-ui'
+import { BreadcrumbItem } from 'element-ui'
+import { Card } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 // 通过下面的方法，把组件注册为全局可用的组件,不能放在一起写
@@ -38,5 +41,8 @@ Vue.use(Row)
 Vue.use(Progress)
 Vue.use(Loading)
 Vue.use(Col)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Card)
 // Message组件需要挂载到Vue，只需要访问$message
 Vue.prototype.$message = Message

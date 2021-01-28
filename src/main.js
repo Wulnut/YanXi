@@ -12,7 +12,7 @@ import '@/plugins/element.js'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
 // 导入全局样式
-import './assets/css/global.css'
+import '@/assets/css/global.css'
 // 对axios进行全局配置
 import axios from 'axios'
 
