@@ -4,16 +4,18 @@
 */
 import Vue from 'vue'
 import Router from 'vue-router'
-import login from "@/components/login";
+import login from '@/components/www/login'
+import admin_Home from '@/components/admin/Home'
 
 Vue.use(Router)
 
 const router = new Router({
-    mode: 'hash',
-    routes: [
-        {path: '/', redirect: '/login'},
-        {path: '/login', component: login},
-    ]
+  mode: 'hash',
+  routes: [
+    { path: '/', redirect: '/login' },
+    { path: '/login', component: login },
+    { path: '/admin-home', component: admin_Home }
+  ]
 })
 
 // 挂载路由导航守卫
