@@ -19,7 +19,7 @@ import axios from 'axios'
 // 让ajax携带cookie
 // axios.defaults.withCredentials = true
 // 配置请求根路径
-axios.defaults.baseURL = 'http://localhost:8080/'
+axios.defaults.baseURL = 'https://df5c6f5b-e47c-4657-aeb9-f981a2503217.mock.pstmn.io'
 // 设置默认头部
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 // axios请求拦截
