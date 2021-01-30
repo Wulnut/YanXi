@@ -28,6 +28,7 @@ import { Tag } from 'element-ui'
 import { Tooltip } from 'element-ui'
 import { Pagination } from 'element-ui'
 import { Dialog } from 'element-ui'
+import { Select } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 // 通过下面的方法，把组件注册为全局可用的组件,不能放在一起写
@@ -56,5 +57,6 @@ Vue.use(Tag)
 Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
+Vue.use(Select)
 // Message组件需要挂载到Vue，只需要访问$message
 Vue.prototype.$message = Message

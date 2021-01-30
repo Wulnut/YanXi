@@ -9,6 +9,7 @@ import admin_Home from '@/components/admin/Home'
 import admin_login from '@/components/admin/Login'
 import Welcome from '@/components/admin/Welcome'
 import admin_Users from '@/components/admin/user/adminUsers'
+import admin_Right from '@/components/admin/power/Rights'
 
 Vue.use(Router)
 
@@ -21,7 +22,8 @@ const router = new Router({
     { path: '/admin-home', component: admin_Home, redirect: '/welcome',
       children: [
         { path: '/welcome', component: Welcome },
-        { path: '/userList', component: admin_Users }
+        { path: '/userList', component: admin_Users },
+        { path: '/rights', component: admin_Right }
       ] }
   ]
 })

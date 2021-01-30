@@ -15,6 +15,10 @@ import 'element-ui/lib/theme-chalk/display.css'
 import '@/assets/css/global.css'
 // 对axios进行全局配置
 import axios from 'axios'
+// 导入nprogress
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import 'nprogress/nprogress'
 
 // 让ajax携带cookie
 // axios.defaults.withCredentials = true
@@ -22,6 +26,21 @@ import axios from 'axios'
 axios.defaults.baseURL = 'https://df5c6f5b-e47c-4657-aeb9-f981a2503217.mock.pstmn.io'
 // 设置默认头部
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
+axios.interceptors.request.use(config => {
+  NProgress.start()
+  return config
+})
+axios.interceptors.response.use(config => {
+  NProgress.done()
+  return config
+})
+NProgress.configure({
+  easing: 'ease', // 动画方式
+  speed: 500, // 递增进度条的速度
+  showSpinner: false, // 是否显示加载ico
+  trickleSpeed: 200, // 自动递增间隔
+  minimum: 0.3 // 初始化时的最小百分比
+})
 // axios请求拦截
 // axios.interceptors.request.use(config => {
 //   // console.log(config)
