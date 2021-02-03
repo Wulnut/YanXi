@@ -4,12 +4,12 @@
 */
 import Vue from 'vue'
 import Router from 'vue-router'
-import login from '@/components/www/login'
-import admin_Home from '@/components/admin/Home'
-import admin_login from '@/components/admin/Login'
-import Welcome from '@/components/admin/Welcome'
-import admin_Users from '@/components/admin/user/adminUsers'
-import admin_Right from '@/components/admin/power/Rights'
+import login from '@/view/www/login'
+import admin_Home from '@/view/admin/Home'
+import admin_login from '@/view/admin/Login'
+import Welcome from '@/view/admin/Welcome'
+import admin_Users from '@/view/admin/user/adminUsers'
+import admin_Right from '@/view/admin/power/Rights'
 
 Vue.use(Router)
 

@@ -9,6 +9,7 @@ import router from '@/router'
 import './assets/fonts/iconfont.css'
 // 导入element-ui
 import '@/plugins/element.js'
+import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
 // 导入全局样式
@@ -19,6 +20,10 @@ import axios from 'axios'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import 'nprogress/nprogress'
+import store from './store'
+
+import '@/icons' // icon
+import '@/permission' // permission control
 
 // 让ajax携带cookie
 // axios.defaults.withCredentials = true
@@ -52,8 +57,13 @@ NProgress.configure({
 // 挂载到Vue的原型对象，这样Vue的每个组件都可以通过.访问$http从而发出ajax请求
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
+Vue.use(ElementUI)
+
+Vue.config.productionTip = false
 
 new Vue({
+  el: '#app',
   router,
+  store,
   render: h => h(App)
-}).$mount('#app')
+})
