@@ -86,6 +86,10 @@ export default {
           'id': 101,
           'authName': '用户列表',
           'path': '/userList'
+        }, {
+          'id': 102,
+          'authName': '权限管理',
+          'path': '/rights'
         }]
       }]
     },
